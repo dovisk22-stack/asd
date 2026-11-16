@@ -8,7 +8,7 @@ const STORAGE_KEY = 'cardnest_collection_v1';
 const $ = (q,scope=document)=>scope.querySelector(q);
 const $$ = (q,scope=document)=>Array.from(scope.querySelectorAll(q));
 const esc = s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const number = val => (val===null||val===undefined||String(val).trim()==='') ? null : Number.isFinite(Number(val)) ? Number(val) : null;
+const number = val => (val===null||val===undefined||String(val).trim()==='') ? null : Number.isFinite(Number(val))&&Number(val)>0 ? Number(val) : null;
 const money = val => Number.isFinite(val) ? new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP'}).format(val) : '—';
 const niceDate = str => {const num=typeof str==='number'?str:null;const date=new Date(num===null?str:(num<1e11?num*1000:num));return Number.isFinite(date.getTime())?date.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}):'Unknown';};
 const cardImage = (c,quality='low') => c?.image ? `${c.image}/${quality}.webp` : '';
