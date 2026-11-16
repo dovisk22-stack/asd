@@ -214,14 +214,25 @@ async function searchLanguage(lang,name,num){
    if(terms[1])result.push(...await query('name',terms[1],180));
   }
  }
- if(num&&!result.some(x=>normNo(x.localId)===normNo(num))){
-  const numbers=[num];
-  if(/^\d+$/.test(num)&&String(Number(num))!==num)numbers.push(String(Number(num)));
-  for(const id of numbers){
-   const found=await query('localId',id,500);
-   result.push(...found.filter(x=>normNo(x.localId)===normNo(num)));
-   if(result.some(x=>normNo(x.localId)===normNo(num)))break;
+ if(num){
+  // Use strict equality, not the catalog's default substring search. Without
+  // eq: the common number 025 also matches thousands of other collector IDs.
+  const ids=[num];
+  if(/^\d+$/.test(num)){
+   const base=String(Number(num));
+   ids.push(base,base.padStart(2,'0'),base.padStart(3,'0'),base.padStart(4,'0'));
   }
+  const variants=[...new Set(ids)];
+  let found=await query('localId','eq:'+variants.join('|'),500);
+  // TCGdex supports OR filters, but retry single exact matches if a backend
+  // version doesn't parse multiple values.
+  if(!found.length){
+   for(const id of variants.slice(0,3)){
+    const exact=await query('localId','eq:'+id,500);
+    found.push(...exact);if(exact.length)break;
+   }
+  }
+  result.push(...found.filter(x=>normNo(x.localId)===normNo(num)));
  }
  const seen=new Set();
  return result.filter(x=>{
@@ -246,11 +257,29 @@ searchCards=async function(type,name,rawNumber=''){
    x.value.forEach(card=>{const key=card.lang+':'+card.id;if(!seen.has(key)){seen.add(key);cards.push(card);}});
   });
   if(failures===langs.length)throw Error('Card catalog not reachable');
-  cards.sort((a,b)=>matchRank(b,query,num)-matchRank(a,query,num));
+  // OCR often guesses the wrong first line. If there are no matches, retry
+  // up to two alternative name candidates from the photo.
+  const alternatives=(lastOCR?.name===query?lastOCR.alternatives:[])||[];
+  if(!cards.length&&alternatives.length){
+   for(const otherName of alternatives.slice(0,2)){
+    const fallbacks=await Promise.allSettled(langs.map(lang=>searchLanguage(lang,otherName,num)));
+    fallbacks.forEach(out=>{
+     if(out.status!=='fulfilled')return;
+     out.value.forEach(card=>{
+      const key=card.lang+':'+card.id;
+      if(!seen.has(key)){seen.add(key);cards.push(card);}
+     });
+    });
+    if(cards.length)break;
+   }
+  }
+  const rating=card=>Math.max(matchRank(card,query,num),
+    ...alternatives.map(alt=>matchRank(card,alt,num)));
+  cards.sort((a,b)=>rating(b)-rating(a));
   state.results.scan=cards;state.resultViews.scan=20;state.queries.scan=query;
   renderResults('scan');
   cards.slice(0,3).forEach((card,index)=>{
-   const score=matchRank(card,query,num);
+   const score=rating(card);
    if(score<100)return;
    const frame=$s('#scan-results .card-grid')?.children[index]?.querySelector('.card-image-frame');
    if(!frame)return;
