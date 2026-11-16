@@ -98,7 +98,7 @@ async function doOCR(worker,image,message,psm='6',numbersOnly=false){
 }
 async function multiPass(worker,img,label,fast=false){
  const top=[],bottom=[];
- top.push({...await doOCR(worker,crop(img,.035,.015,.93,.29),'Reading '+label+' card name…'),weight:15});
+ top.push({...await doOCR(worker,crop(img,.035,.015,.93,.29),'Reading card name ('+label+' view)…'),weight:15});
  bottom.push(await doOCR(worker,crop(img,.02,.67,.96,.32),'Reading collector number…','11',true));
  let found=parseReads(top,bottom);
  if(!found.name){
@@ -138,14 +138,21 @@ recognizePhoto=async function(){
   const choice=$s('#scan-language').value;
   worker=await workerFor(choice);
   const passes=[await multiPass(worker,regular,'the')];
+  // A card may occupy only the center of a photo, not its full frame.
+  if(!passes[0].name||!passes[0].number){
+   const center=crop(regular,.13,.095,.74,.81,false);
+   passes.push(await multiPass(worker,center,'centered',true));
+  }
   // Automatic orientation correction for a sideways photograph.
-  if(!passes[0].name&&!passes[0].number&&image.naturalWidth>image.naturalHeight*1.06){
+  if(!passes.some(p=>p.name||p.number)&&image.naturalWidth>image.naturalHeight*1.06){
    passes.push(await multiPass(worker,orientation(image,90),'rotated',true));
    if(!passes[1].name&&!passes[1].number)
     passes.push(await multiPass(worker,orientation(image,-90),'alternate rotation',true));
   }
   // Auto does not load three large Chinese models simultaneously on iPhones.
-  if(choice==='auto'&&!passes.some(p=>p.name&&CJK.test(p.name))){
+  const recognizedChinese=passes.some(p=>p.name&&CJK.test(p.name));
+  const readableEnglish=passes.some(p=>p.name&&/[A-Za-z]{3}/.test(p.name)&&(p.number||p.top[0]?.confidence>=55));
+  if(choice==='auto'&&!recognizedChinese&&!readableEnglish){
    await worker.terminate();worker=null;
    status('Checking Simplified Chinese text…');
    worker=await workerFor('zh-cn');
