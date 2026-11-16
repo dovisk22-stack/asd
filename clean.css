@@ -161,4 +161,6 @@ main{padding-top:30px}
  .market-row{padding:10px}
  .market-heading{flex-wrap:wrap}
 }
+#rotate-photo{display:inline-flex!important;visibility:visible!important;opacity:1!important;min-height:44px!important;align-items:center;justify-content:center;color:#ddd4f3}
+#rotate-photo[aria-disabled="true"]{border-style:dashed;color:#a5a5bd;background:#1a1d29}
 @media(prefers-reduced-motion:reduce){.page.active{animation:none}}
