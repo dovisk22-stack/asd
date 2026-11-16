@@ -296,10 +296,10 @@ searchCards=async function(type,name,rawNumber=''){
 };
 function addControls(){
  const row=$s('.scan-controls');
- if(!row||$s('#rotate-photo'))return;
- const btn=document.createElement('button');btn.type='button';btn.id='rotate-photo';
- btn.className='btn btn-outline smart-rotate';btn.textContent='↻ Rotate photo';
- btn.title='Rotate your photo 90° clockwise';btn.disabled=true;row.append(btn);
+ if(!row)return;
+ let btn=$s('#rotate-photo');
+ if(!btn){btn=document.createElement('button');btn.type='button';btn.id='rotate-photo';btn.className='btn btn-outline smart-rotate';btn.textContent='↻ Rotate photo';btn.disabled=true;row.append(btn);}
+ btn.title='Rotate your photo 90° clockwise';
  const before=setPhoto;
  setPhoto=function(file){
   const result=before(file);btn.disabled=!state.photoFile;lastOCR=null;return result;
