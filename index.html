@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#101023" />
+  <meta name="theme-color" content="#0b0d15" />
   <meta name="description" content="CardNest — your Pokémon TCG collection, organized and priced in one place. Unofficial fan-made tool." />
   <meta property="og:title" content="CardNest — Every card counts." />
   <meta property="og:description" content="Scan, search, and track your Pokémon trading card collection." />
-  <title>CardNest — The collector experience</title>
+  <title>CardNest — Your cards, simply organized</title>
   <link rel="manifest" href="./manifest.webmanifest" />
   <link rel="icon" href="./icon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://api.tcgdex.net" />
   <link rel="preconnect" href="https://assets.tcgdex.net" />
   <link rel="stylesheet" href="./styles.css" />
   <link rel="stylesheet" href="./studio.css" />
+  <link rel="stylesheet" href="./clean.css" />
 </head>
 <body>
   <div id="app" class="app-shell">
@@ -49,12 +50,12 @@
       </header>
       <main id="main">
         <section class="page active" id="page-home" aria-label="Overview">
-          <div class="welcome-line"><span class="eyebrow"><span class="sparkle">✦</span> WELCOME TO YOUR COLLECTION</span><span class="today" id="today"></span></div>
+          <div class="welcome-line"><span class="eyebrow"><span class="sparkle">✦</span> WELCOME BACK</span><span class="today" id="today"></span></div>
           <div class="hero">
             <div class="hero-copy">
-              <div class="hero-tag"><span class="dot-purple"></span> A BETTER WAY TO COLLECT</div>
-              <h1>Collect the<br/><em>extraordinary.</em></h1>
-              <p>Scan your favorite cards, explore their market value, and build a stunning digital binder that grows with every pull.</p>
+              <div class="hero-tag"><span class="dot-purple"></span> YOUR POKÉMON COLLECTION</div>
+              <h1>Your cards.<br/><em>All in one place.</em></h1>
+              <p>Scan a card, find its details and track your collection. Simple, organized, and made for collectors.</p>
               <div class="hero-buttons"><button class="btn btn-primary" data-nav="scan">▣ &nbsp; Scan a card <span>↗</span></button><button class="btn btn-ghost" data-nav="explore">Explore cards <span>→</span></button></div>
             </div>
             <div class="hero-art" aria-hidden="true"><div class="art-orbit o1"></div><div class="art-orbit o2"></div><div class="art-glow"></div><div class="floating-card card-back"><span class="card-back-sigil">✧</span><div class="card-back-lines"></div></div><div class="floating-card card-front"><span class="art-planet">✦</span><span class="art-card-caption">COLLECT • TRACK • DISCOVER</span></div><div class="art-spark a">✧</div><div class="art-spark b">✦</div></div>
@@ -65,7 +66,7 @@
             <article class="stat-card"><div class="stat-icon peach">▧</div><span>Unique cards</span><strong id="home-unique">0</strong><small>Different prints in your collection</small></article>
             <article class="stat-card"><div class="stat-icon green">✧</div><span>Top card value</span><strong id="home-top">—</strong><small id="home-topname">No cards added yet</small></article>
           </div>
-          <div class="section-heading"><div><span class="eyebrow subtle">GET STARTED</span><h2>Your next move</h2></div></div>
+          <div class="section-heading"><div><span class="eyebrow subtle">GET STARTED</span><h2>What would you like to do?</h2></div></div>
           <div class="action-grid">
             <button class="action-card" data-nav="scan"><span class="action-glyph scanner-glyph">⌗</span><span class="action-body"><strong>Scan your cards</strong><small>Upload or snap a photo to find a match.</small></span><span class="action-arrow">↗</span></button>
             <button class="action-card" data-nav="explore"><span class="action-glyph search-glyph">⌕</span><span class="action-body"><strong>Search the catalog</strong><small>Find cards by name or collector number.</small></span><span class="action-arrow">↗</span></button>
@@ -75,7 +76,7 @@
         </section>
 
         <section class="page" id="page-scan" aria-label="Card scanner">
-          <div class="page-intro"><span class="eyebrow"><span class="sparkle">✦</span> SMARTSCAN 3.0 · CHINESE + ENGLISH</span><h1>Point. Scan. Collect<span class="period">.</span></h1><p>Upload a clear card photo. SmartScan reads several text regions, checks Chinese and English names, and compares collector numbers to suggest possible matches. Confirm the artwork and set before adding.</p></div>
+          <div class="page-intro"><span class="eyebrow"><span class="sparkle">✦</span> SMARTSCAN 3.0 · CHINESE + ENGLISH</span><h1>Point. Scan. Collect<span class="period">.</span></h1><p>Upload a clear photo and let SmartScan search for a match. Supports English and Chinese cards. Confirm the artwork, set and number before saving.</p></div>
           <div class="scan-layout">
             <div class="scan-panel">
               <div id="drop-zone" class="drop-zone" role="button" tabindex="0" aria-label="Upload Pokémon card photo"><div id="scan-placeholder"><div class="scan-illustration"><span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><span>▣</span></div><h3>Bring your card into focus</h3><p>or tap to choose from your camera or photo library</p><div class="file-formats">JPG, PNG, WEBP · 12MB max</div></div><img id="scan-preview" alt="Your uploaded trading card" hidden /></div>
@@ -91,14 +92,14 @@
         </section>
 
         <section class="page" id="page-explore" aria-label="Explore cards">
-          <div class="page-intro"><span class="eyebrow"><span class="sparkle">✦</span> POKÉMON TCG CATALOG</span><h1>Discover your next card<span class="period">.</span></h1><p>Search real card records, compare artwork and sets, and add your favorites to your binder.</p></div>
+          <div class="page-intro"><span class="eyebrow"><span class="sparkle">✦</span> POKÉMON TCG CATALOG</span><h1>Discover your next card<span class="period">.</span></h1><p>Search real card records, check the exact print, and add cards to your collection.</p></div>
           <div class="explore-language"><label for="explore-language">Catalog language</label><select id="explore-language"><option value="en">English</option><option value="zh-tw">Chinese (Traditional)</option><option value="zh-cn">Chinese (Simplified)</option><option value="auto">All three</option></select></div><form class="explore-search" id="explore-search-form"><span>⌕</span><input id="explore-query" placeholder="Search Pokémon, trainer, or card name..." aria-label="Search catalog" autocomplete="off" required /><button class="btn btn-primary" type="submit">Search</button></form>
           <div class="popular-searches"><span>TRY:</span><button data-search="Pikachu">Pikachu</button><button data-search="Charizard">Charizard</button><button data-search="Mew">Mew</button><button data-search="Umbreon">Umbreon</button><button data-search="Gengar">Gengar</button></div>
           <div id="explore-results"><div class="empty-results initial"><span>✧</span><h3>Your next find is a search away.</h3><p>Try a Pokémon name above to browse matching cards.</p></div></div>
         </section>
 
         <section class="page" id="page-collection" aria-label="My collection">
-          <div class="page-intro collection-intro"><div><span class="eyebrow"><span class="sparkle">✦</span> YOUR PERSONAL BINDER</span><h1>Your digital binder<span class="period">.</span></h1><p>Every pull, every treasure. All in one place.</p></div><button class="btn btn-primary" data-nav="explore">＋ &nbsp; Add cards</button></div>
+          <div class="page-intro collection-intro"><div><span class="eyebrow"><span class="sparkle">✦</span> YOUR PERSONAL BINDER</span><h1>Your digital binder<span class="period">.</span></h1><p>All your cards and estimated values, in one place.</p></div><button class="btn btn-primary" data-nav="explore">＋ &nbsp; Add cards</button></div>
           <div class="collection-summary"><div><span>ESTIMATED COLLECTION VALUE</span><strong id="collection-value">£0.00</strong><p id="collection-priced-note">Based on available prices</p></div><div class="collection-summary-figure">✧</div></div>
           <div class="collection-toolbar"><input id="collection-query" placeholder="⌕  Search your cards" aria-label="Search collection" /><select id="collection-sort" aria-label="Sort collection"><option value="recent">Recently added</option><option value="value">Highest estimated value</option><option value="name">Name A–Z</option><option value="quantity">Most copies</option></select><button id="refresh-prices" class="btn btn-outline small-btn">↻ Update prices</button></div>
           <div id="collection-results"></div>
@@ -124,5 +125,6 @@
   <script src="./app.js" defer></script>
   <script src="./experience.js" defer></script>
   <script src="./scanner-pro.js" defer></script>
+  <script src="./live-data.js" defer></script>
 </body>
 </html>
