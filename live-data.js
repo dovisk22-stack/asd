@@ -18,7 +18,7 @@ const curr=(value,unit)=>{
 const good=val=>{
  if(val===null||val===undefined||String(val).trim()==='')return null;
  const num=Number(val);
- return Number.isFinite(num)&&num>=0?num:null;
+ return Number.isFinite(num)&&num>0?num:null;
 };
 const formatDate=x=>{
  if(!x)return 'date unavailable';
