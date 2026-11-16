@@ -298,22 +298,22 @@ function addControls(){
  const row=$s('.scan-controls');
  if(!row)return;
  let btn=$s('#rotate-photo');
- if(!btn){btn=document.createElement('button');btn.type='button';btn.id='rotate-photo';btn.className='btn btn-outline smart-rotate';btn.textContent='↻ Rotate photo';btn.disabled=true;row.append(btn);}
+ if(!btn){btn=document.createElement('button');btn.type='button';btn.id='rotate-photo';btn.className='btn btn-outline smart-rotate';btn.textContent='↻ Rotate photo';btn.setAttribute('aria-disabled','true');row.append(btn);}
  btn.title='Rotate your photo 90° clockwise';
  const before=setPhoto;
  setPhoto=function(file){
-  const result=before(file);btn.disabled=!state.photoFile;lastOCR=null;return result;
+  const result=before(file);btn.disabled=false;btn.setAttribute('aria-disabled',String(!state.photoFile));lastOCR=null;return result;
  };
- if(state.photoFile)btn.disabled=false;
+ btn.disabled=false;btn.setAttribute('aria-disabled',String(!state.photoFile));
  btn.onclick=async()=>{
-  if(!state.photoFile)return;btn.disabled=true;
+  if(!state.photoFile){toast('Choose a card photo first, then rotate it.');return;}btn.disabled=true;
   try{
    const img=await decode(state.photoUrl),canvas=orientation(img,90);
    const blob=await new Promise((ok,fail)=>canvas.toBlob(b=>b?ok(b):fail(Error('Rotation unavailable')),'image/jpeg',.94));
    setPhoto(new File([blob],'rotated-pokemon-card.jpg',{type:'image/jpeg'}));
    status('Photo rotated. Tap Read card text to scan it again.');
   }catch(e){toast('Could not rotate: '+e.message,'error');}
-  finally{btn.disabled=!state.photoFile;}
+  finally{btn.disabled=false;btn.setAttribute('aria-disabled',String(!state.photoFile));}
  };
  const guide=$s('.scan-info');
  if(guide&&!$s('#smart-guide')){
