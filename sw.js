@@ -1,4 +1,4 @@
-const CACHE='cardnest-ui-v6';
+const CACHE='cardnest-ui-v7';
 const ASSETS=['./','./index.html','./styles.css','./studio.css','./clean.css','./app.js','./experience.js','./scanner-pro.js','./live-data.js','./manifest.webmanifest','./icon.svg'];
 self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting())));
 self.addEventListener('activate',e=>e.waitUntil(Promise.all([self.clients.claim(),caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('cardnest-ui-')&&k!==CACHE).map(k=>caches.delete(k))))])));
