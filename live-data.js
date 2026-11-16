@@ -134,7 +134,7 @@ async function renderCatalog(){
   for(const response of results){
    if(response.status!=='fulfilled')continue;
    const useful=response.value.filter(card=>card?.image&&card?.id&&card?.name);
-   const positions=[0,Math.floor(useful.length*.32),Math.floor(useful.length*.67)];
+   const positions=[0,Math.floor(useful.length*.55)];
    for(const i of positions){
     const card=useful[i];
     if(card&&!cards.some(x=>x.id===card.id))cards.push(card);
