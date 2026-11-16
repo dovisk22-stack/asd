@@ -144,6 +144,7 @@ async function renderCatalog(){
   }
   if(!cards.length)throw Error('No cards returned');
   gallery.replaceChildren();
+  if(!selector('.hero-real-card'))fillHeroCard(cards[0]);
   cards.slice(0,6).forEach(c=>{
    const button=node('button','catalog-card');button.type='button';
    button.dataset.cardid=c.id;button.dataset.cardlang=c.lang||'en';
@@ -157,20 +158,22 @@ async function renderCatalog(){
   gallery.replaceChildren(node('p','catalog-fallback','The card catalog is temporarily unavailable. You can still scan or search your own cards.'));
  }
 }
+function fillHeroCard(card){
+ const host=selector('.hero-art');if(!host||!card?.image)return;
+ const button=node('button','hero-real-card');button.type='button';
+ button.dataset.cardid=card.id;button.dataset.cardlang=card.lang||'en';
+ button.setAttribute('aria-label','View '+card.name+' card details');
+ const img=node('img');img.src=card.image+'/high.webp';img.alt=card.name;
+ const caption=node('div','hero-card-info');
+ caption.append(node('span','','From the catalog'),node('strong','',card.name),
+  node('small','',card.set?.name||'Pokémon TCG'));
+ button.append(img,caption);host.replaceChildren(button);
+}
 async function renderHeroArt(){
- const host=selector('.hero-art');if(!host)return;
  try{
   const card=await fetchCard('swsh3-136',false,'en');
-  if(!card?.image)return;
-  const button=node('button','hero-real-card');button.type='button';
-  button.dataset.cardid=card.id;button.dataset.cardlang='en';
-  button.setAttribute('aria-label','View '+card.name+' card details');
-  const img=node('img');img.src=card.image+'/high.webp';img.alt=card.name;
-  const caption=node('div','hero-card-info');
-  caption.append(node('span','','From the catalog'),node('strong','',card.name),
-   node('small','',card.set?.name||'Pokémon TCG'));
-  button.append(img,caption);host.replaceChildren(button);
- }catch{/* original illustration remains as offline fallback */}
+  if(card?.image)fillHeroCard(card);
+ }catch{/* The live catalog gallery supplies the featured card when possible. */}
 }
 function init(){
  catalogSection();
