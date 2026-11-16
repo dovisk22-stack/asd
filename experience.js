@@ -9,7 +9,7 @@
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const key = 'cardnest_collection_v1';
   const safeText = value => String(value ?? '');
-  let lastCollectionSignature = '';
+  let lastCollectionSignature = null;
   const make = (tag, classname, text) => {
     const el=document.createElement(tag);
     if (classname) el.className=classname;
